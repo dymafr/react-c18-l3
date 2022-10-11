@@ -2,31 +2,14 @@ import React, { useContext } from 'react';
 import { ApiContext } from '../../../../context/ApiContext';
 import styles from './Recipe.module.scss';
 
-function Recipe({
-  recipe: { title, image, liked, _id },
-  toggleLikedRecipe,
-  deleteRecipe,
-}) {
+function Recipe({ recipe, deleteRecipe }) {
   const BASE_URL_API = useContext(ApiContext);
 
-  async function handleClick() {
-    try {
-      const response = await fetch(`${BASE_URL_API}/${_id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          liked: !liked,
-        }),
-      });
-      if (response.ok) {
-        const updatedRecipe = await response.json();
-        toggleLikedRecipe(updatedRecipe);
-      }
-    } catch (e) {
-      console.log('Erreur');
-    }
+  function handleClickLike() {
+    updateRecipe({
+      ...recipe,
+      liked: !recipe.liked,
+    });
   }
 
   async function handleClickDelete(e) {
@@ -44,7 +27,7 @@ function Recipe({
   }
 
   return (
-    <div onClick={handleClick} className={styles.recipe}>
+    <div onClick={handleClickLike} className={styles.recipe}>
       <i onClick={handleClickDelete} className="fa-solid fa-xmark"></i>
       <div className={styles.imageContainer}>
         <img src={image} alt={title} />

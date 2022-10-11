@@ -13,9 +13,24 @@ export default function HomePage() {
   const [[recipes, setRecipes], isLoading] = useFetchData(BASE_URL_API, page);
 
   function updateRecipe(updatedRecipe) {
-    setRecipes(
-      recipes.map((r) => (r._id === updatedRecipe._id ? updatedRecipe : r))
-    );
+    try {
+      const { _id, ...restRecipe } = updatedRecipe;
+      const response = await fetch(`${RECIPE_API}/${_id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(restRecipe),
+      });
+      if (response.ok) {
+        const updatedRecipe = await response.json();
+        setRecipes(
+          recipes.map((r) => (r._id === updatedRecipe._id ? updatedRecipe : r))
+        );
+      }
+    } catch (err) {
+      console.error('ERREUR maj recette');
+    }
   }
 
   function deleteRecipe(_id) {
