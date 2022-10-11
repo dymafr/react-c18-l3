@@ -12,7 +12,7 @@ export default function HomePage() {
   const BASE_URL_API = useContext(ApiContext);
   const [[recipes, setRecipes], isLoading] = useFetchData(BASE_URL_API, page);
 
-  function updateRecipe(updatedRecipe) {
+  async function updateRecipe(updatedRecipe) {
     try {
       const { _id, ...restRecipe } = updatedRecipe;
       const response = await fetch(`${RECIPE_API}/${_id}`, {
@@ -33,8 +33,17 @@ export default function HomePage() {
     }
   }
 
-  function deleteRecipe(_id) {
-    setRecipes(recipes.filter((r) => r._id !== _id));
+  async function deleteRecipe(_id) {
+    try {
+      const response = await fetch(`${BASE_URL_API}/${_id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setRecipes(recipes.filter((r) => r._id !== _id));
+      }
+    } catch (e) {
+      console.log('ERREUR suppression recette');
+    }
   }
 
   return (
@@ -57,7 +66,7 @@ export default function HomePage() {
                 <Recipe
                   key={r._id}
                   recipe={r}
-                  toggleLikedRecipe={updateRecipe}
+                  updateRecipe={updateRecipe}
                   deleteRecipe={deleteRecipe}
                 />
               ))}
