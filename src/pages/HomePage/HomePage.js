@@ -15,7 +15,7 @@ export default function HomePage() {
   async function updateRecipe(updatedRecipe) {
     try {
       const { _id, ...restRecipe } = updatedRecipe;
-      const response = await fetch(`${RECIPE_API}/${_id}`, {
+      const response = await fetch(`${BASE_URL_API}/${_id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
