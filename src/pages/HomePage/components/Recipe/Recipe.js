@@ -1,10 +1,7 @@
-import React, { useContext } from 'react';
-import { ApiContext } from '../../../../context/ApiContext';
+import React from 'react';
 import styles from './Recipe.module.scss';
 
 function Recipe({ recipe, updateRecipe, deleteRecipe }) {
-  const BASE_URL_API = useContext(ApiContext);
-
   function handleClickLike() {
     updateRecipe({
       ...recipe,
